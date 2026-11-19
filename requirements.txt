@@ -1,0 +1,23 @@
+# ==============================================================================
+# NIDS - Network Intrusion Detection System
+# Core Requirements (Target: Python 3.13 on Windows 10/11)
+# ==============================================================================
+
+# Web Dashboard & REST Backend
+Flask>=3.1.0
+Werkzeug>=3.1.0
+Jinja2>=3.1.0
+
+# Network Packet Capture & Inspection
+scapy>=2.8.0
+
+# Environment Configuration
+python-dotenv>=1.0.1
+
+# Database:
+# SQLite3 is built into Python's standard library; no external driver required.
+
+# Note for Windows Users:
+# Scapy requires Npcap (https://npcap.com/) installed on Windows with 
+# "Install Npcap in WinPcap API-compatible Mode" checked.
+

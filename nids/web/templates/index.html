@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIDS | Security Operations Center</title>
+    <meta name="description" content="Network Intrusion Detection System - Real-time Threat Monitoring & Alert Management Console">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Chart.js for telemetry analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body class="dark-theme">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-logo">
+                    <span class="shield-icon" aria-hidden="true">🛡️</span>
+                    <div class="brand-text">
+                        <span class="brand-title">NIDS SOC</span>
+                        <span class="brand-subtitle">Network Defense Console</span>
+                    </div>
+                </div>
+                <button id="sidebar-close-btn" class="sidebar-close-btn" aria-label="Close navigation menu">&times;</button>
+            </div>
+
+            <nav class="nav-menu" aria-label="Primary navigation">
+                <a href="#overview" class="nav-item active" data-section="overview">
+                    <span class="nav-icon" aria-hidden="true">📊</span>
+                    <span class="nav-label">Overview</span>
+                </a>
+                <a href="#alerts" class="nav-item" data-section="alerts">
+                    <span class="nav-icon" aria-hidden="true">🚨</span>
+                    <span class="nav-label">Live Alerts</span>
+                    <span id="nav-alerts-badge" class="nav-badge" aria-label="Unacknowledged alerts count">0</span>
+                </a>
+                <a href="#traffic" class="nav-item" data-section="traffic">
+                    <span class="nav-icon" aria-hidden="true">📈</span>
+                    <span class="nav-label">Traffic Analysis</span>
+                </a>
+                <a href="#capture" class="nav-item" data-section="capture">
+                    <span class="nav-icon" aria-hidden="true">🛰️</span>
+                    <span class="nav-label">Capture Controls</span>
+                </a>
+                <a href="#status" class="nav-item" data-section="status">
+                    <span class="nav-icon" aria-hidden="true">🖥️</span>
+                    <span class="nav-label">System Status</span>
+                </a>
+                <a href="/" class="nav-item nav-item-portal" id="public-portal-link" title="Return to NIDS Public Portal">
+                    <span class="nav-icon" aria-hidden="true">🌐</span>
+                    <span class="nav-label">Public Portal</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="system-pill">
+                    <span class="status-indicator-dot" id="sidebar-capture-dot"></span>
+                    <span id="sidebar-capture-text">Capture: IDLE</span>
+                </div>
+                <div class="env-pill">
+                    <span>Windows 10/11</span>
+                    <span class="badge-subtle">Npcap</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <div class="main-wrapper">
+            <!-- Top App Bar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Open navigation menu">
+                        <span class="menu-bar"></span>
+                        <span class="menu-bar"></span>
+                        <span class="menu-bar"></span>
+                    </button>
+                    <div>
+                        <h1 class="page-title" id="page-heading">Operations Overview</h1>
+                        <span class="page-subtitle">Real-time intrusion detection and traffic telemetry</span>
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+                    <div class="capture-status-badge" id="header-capture-badge">
+                        <span class="pulse-dot" id="header-pulse-dot"></span>
+                        <span id="header-capture-status-text">Capture: IDLE</span>
+                    </div>
+
+                    <div class="topbar-action-group">
+                        <div class="refresh-control">
+                            <label for="auto-refresh-select" class="sr-only">Auto Refresh Interval</label>
+                            <select id="auto-refresh-select" class="select-compact" aria-label="Auto refresh interval">
+                                <option value="5000">Auto: 5s</option>
+                                <option value="10000" selected>Auto: 10s</option>
+                                <option value="30000">Auto: 30s</option>
+                                <option value="0">Auto: Off</option>
+                            </select>
+                        </div>
+
+                        <button id="manual-refresh-btn" class="btn btn-secondary btn-sm" title="Manually refresh all dashboard data">
+                            <span class="btn-icon" aria-hidden="true">🔄</span>
+                            <span>Refresh</span>
+                        </button>
+
+                        <a href="/" class="btn btn-secondary btn-sm" id="btn-back-home" title="Return to NIDS Public Portal" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem;">
+                            <span class="btn-icon" aria-hidden="true">🌐</span>
+                            <span>Public Portal</span>
+                        </a>
+                    </div>
+
+                    <div class="last-updated" id="last-updated-text" title="Last API synchronization timestamp">
+                        Updated: --:--:--
+                    </div>
+                </div>
+            </header>
+
+            <!-- Global Toast / Banner Notifications -->
+            <div id="notification-banner" class="notification-banner hidden" role="alert" aria-live="polite">
+                <span id="notification-text"></span>
+                <button id="notification-close-btn" class="close-btn" aria-label="Dismiss notification">&times;</button>
+            </div>
+
+            <!-- Main Content Container -->
+            <main id="main-content" class="content-area">
+                <!-- ========================================================
+                     SECTION 1: OVERVIEW
+                     ======================================================== -->
+                <section id="section-overview" class="dashboard-section active">
+                    <!-- Metric KPI Cards -->
+                    <div class="kpi-grid">
+                        <div class="card kpi-card">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Total Alerts</span>
+                                <span class="kpi-icon" aria-hidden="true">🔔</span>
+                            </div>
+                            <div class="kpi-value" id="kpi-total-alerts">0</div>
+                            <div class="kpi-footer">Logged security incidents</div>
+                        </div>
+
+                        <div class="card kpi-card kpi-new">
+                            <div class="kpi-header">
+                                <span class="kpi-title">New (Pending)</span>
+                                <span class="kpi-icon" aria-hidden="true">⚡</span>
+                            </div>
+                            <div class="kpi-value text-accent" id="kpi-new-alerts">0</div>
+                            <div class="kpi-footer">Awaiting analyst triage</div>
+                        </div>
+
+                        <div class="card kpi-card kpi-critical">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Critical / High</span>
+                                <span class="kpi-icon" aria-hidden="true">🚨</span>
+                            </div>
+                            <div class="kpi-value text-critical" id="kpi-critical-high-alerts">0</div>
+                            <div class="kpi-footer">High-priority threats</div>
+                        </div>
+
+                        <div class="card kpi-card">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Active Flows</span>
+                                <span class="kpi-icon" aria-hidden="true">🔄</span>
+                            </div>
+                            <div class="kpi-value text-info" id="kpi-active-flows">0</div>
+                            <div class="kpi-footer">Bidirectional sessions tracked</div>
+                        </div>
+
+                        <div class="card kpi-card">
+                            <div class="kpi-header">
+                                <span class="kpi-title">Packets Captured</span>
+                                <span class="kpi-icon" aria-hidden="true">📦</span>
+                            </div>
+                            <div class="kpi-value" id="kpi-packet-count">0</div>
+                            <div class="kpi-footer" id="kpi-capture-adapter">Engine Standby</div>
+                        </div>
+                    </div>
+
+                    <!-- Visual Charts Grid -->
+                    <div class="charts-row">
+                        <div class="card chart-card">
+                            <div class="card-header">
+                                <h2 class="card-title">Alert Severity Distribution</h2>
+                                <span class="card-badge" id="chart-severity-total">0 Total</span>
+                            </div>
+                            <div class="chart-canvas-wrapper">
+                                <canvas id="severityDoughnutChart" aria-label="Doughnut chart showing alert severity breakdown"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="card chart-card">
+                            <div class="card-header">
+                                <h2 class="card-title">Top Triggered Detection Rules</h2>
+                                <span class="card-badge">Heuristic Rules</span>
+                            </div>
+                            <div class="chart-canvas-wrapper">
+                                <canvas id="ruleBarChart" aria-label="Bar chart showing alert counts by detection rule"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================================
+                     SECTION 2: LIVE ALERTS
+                     ======================================================== -->
+                <section id="section-alerts" class="dashboard-section hidden">
+                    <div class="card table-container-card">
+                        <!-- Alert Filter & Search Controls -->
+                        <div class="filter-toolbar">
+                            <div class="search-box">
+                                <span class="search-icon" aria-hidden="true">🔍</span>
+                                <input type="text" id="alert-search-input" class="form-input" placeholder="Search IP, rule, title, or description..." aria-label="Search alerts">
+                            </div>
+
+                            <div class="filter-controls-grid">
+                                <div class="filter-field">
+                                    <label for="filter-severity" class="sr-only">Severity</label>
+                                    <select id="filter-severity" class="form-select" aria-label="Filter by severity">
+                                        <option value="">All Severities</option>
+                                        <option value="CRITICAL">Critical</option>
+                                        <option value="HIGH">High</option>
+                                        <option value="MEDIUM">Medium</option>
+                                        <option value="LOW">Low</option>
+                                        <option value="INFO">Info</option>
+                                    </select>
+                                </div>
+
+                                <div class="filter-field">
+                                    <label for="filter-status" class="sr-only">Status</label>
+                                    <select id="filter-status" class="form-select" aria-label="Filter by lifecycle status">
+                                        <option value="">All Statuses</option>
+                                        <option value="NEW">New (Unacknowledged)</option>
+                                        <option value="ACKNOWLEDGED">Acknowledged</option>
+                                        <option value="RESOLVED">Resolved</option>
+                                    </select>
+                                </div>
+
+                                <div class="filter-field">
+                                    <label for="filter-rule" class="sr-only">Rule Identifier</label>
+                                    <select id="filter-rule" class="form-select" aria-label="Filter by rule ID">
+                                        <option value="">All Detection Rules</option>
+                                        <option value="RULE-PORT-SCAN">RULE-PORT-SCAN (Port Scan)</option>
+                                        <option value="RULE-SYN-FLOOD">RULE-SYN-FLOOD (SYN Flood)</option>
+                                        <option value="RULE-TRAFFIC-SPIKE">RULE-TRAFFIC-SPIKE (Traffic Spike)</option>
+                                        <option value="RULE-SUSPICIOUS-FLOW">RULE-SUSPICIOUS-FLOW (Suspicious Flow)</option>
+                                    </select>
+                                </div>
+
+                                <div class="filter-field">
+                                    <label for="filter-confidence" class="sr-only">Detection Source</label>
+                                    <select id="filter-confidence" class="form-select" aria-label="Filter by detection source">
+                                        <option value="">All Detection Sources</option>
+                                        <option value="SURICATA_SIGNATURE">🛡️ Suricata Signatures</option>
+                                        <option value="HEURISTIC_INDICATOR">🎯 Heuristic Indicators</option>
+                                    </select>
+                                </div>
+
+                                <div class="filter-field date-field">
+                                    <label for="filter-start-date" class="sr-only">Start Date</label>
+                                    <input type="date" id="filter-start-date" class="form-input form-date" title="Start date" aria-label="Start date filter">
+                                </div>
+
+                                <div class="filter-field date-field">
+                                    <label for="filter-end-date" class="sr-only">End Date</label>
+                                    <input type="date" id="filter-end-date" class="form-input form-date" title="End date" aria-label="End date filter">
+                                </div>
+
+                                <button id="filter-reset-btn" class="btn btn-secondary btn-sm" title="Clear all search queries and active filters">
+                                    Reset Filters
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Table Status / Meta Info -->
+                        <div class="table-meta-bar">
+                            <span id="table-record-count-text">Loading security alerts...</span>
+                            <div class="table-meta-actions">
+                                <label for="table-per-page-select" class="text-muted text-sm">Per page:</label>
+                                <select id="table-per-page-select" class="select-compact" aria-label="Alerts per page">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50" selected>50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Alerts Data Table -->
+                        <div class="table-responsive">
+                            <table class="soc-table" id="alerts-table" aria-label="Security events data table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="width: 60px;">ID</th>
+                                        <th scope="col" style="width: 140px;">Timestamp</th>
+                                        <th scope="col" style="width: 100px;">Severity</th>
+                                        <th scope="col">Alert Title & Rule</th>
+                                        <th scope="col">Source & Destination</th>
+                                        <th scope="col" style="width: 80px;">Proto</th>
+                                        <th scope="col" style="width: 110px;">Status</th>
+                                        <th scope="col" style="width: 160px; text-align: right;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="alerts-table-body">
+                                    <tr class="table-state-row">
+                                        <td colspan="8">
+                                            <div class="table-state-message">
+                                                <span class="spinner" aria-hidden="true"></span>
+                                                <span>Connecting to database...</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination Footer -->
+                        <div class="pagination-footer">
+                            <div class="pagination-info" id="pagination-info-text">
+                                Page 1 of 1
+                            </div>
+                            <div class="pagination-nav">
+                                <button id="btn-page-prev" class="btn btn-secondary btn-sm" disabled aria-label="Previous page">
+                                    &larr; Previous
+                                </button>
+                                <span class="current-page-badge" id="current-page-indicator">1</span>
+                                <button id="btn-page-next" class="btn btn-secondary btn-sm" disabled aria-label="Next page">
+                                    Next &rarr;
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================================
+                     SECTION 3: TRAFFIC ANALYSIS
+                     ======================================================== -->
+                <section id="section-traffic" class="dashboard-section hidden">
+                    <div class="traffic-grid">
+                        <!-- Volume & Session Overview Card -->
+                        <div class="card traffic-metric-card">
+                            <div class="card-header">
+                                <h2 class="card-title">Network Session Telemetry</h2>
+                                <span class="card-badge" id="traffic-state-badge">FlowTracker</span>
+                            </div>
+
+                            <div class="metric-row-grid">
+                                <div class="sub-metric">
+                                    <span class="sub-metric-label">Active Flow Sessions</span>
+                                    <span class="sub-metric-val" id="traffic-active-flows">0</span>
+                                </div>
+                                <div class="sub-metric">
+                                    <span class="sub-metric-label">Completed Flow Sessions</span>
+                                    <span class="sub-metric-val" id="traffic-completed-flows">0</span>
+                                </div>
+                                <div class="sub-metric">
+                                    <span class="sub-metric-label">Forward Packets</span>
+                                    <span class="sub-metric-val" id="traffic-forward-packets">0</span>
+                                </div>
+                                <div class="sub-metric">
+                                    <span class="sub-metric-label">Reverse Packets</span>
+                                    <span class="sub-metric-val" id="traffic-reverse-packets">0</span>
+                                </div>
+                                <div class="sub-metric">
+                                    <span class="sub-metric-label">Forward Traffic (Bytes)</span>
+                                    <span class="sub-metric-val" id="traffic-forward-bytes">0 B</span>
+                                </div>
+                                <div class="sub-metric">
+                                    <span class="sub-metric-label">Reverse Traffic (Bytes)</span>
+                                    <span class="sub-metric-val" id="traffic-reverse-bytes">0 B</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Protocol Distribution Card -->
+                        <div class="card chart-card">
+                            <div class="card-header">
+                                <h2 class="card-title">Protocol Distribution</h2>
+                                <span class="card-badge">Captured Frames</span>
+                            </div>
+                            <div class="chart-canvas-wrapper">
+                                <canvas id="protocolDoughnutChart" aria-label="Doughnut chart showing protocol breakdown (TCP, UDP, ICMP, Other)"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================================
+                     SECTION 4: CAPTURE CONTROLS
+                     ======================================================== -->
+                <section id="section-capture" class="dashboard-section hidden">
+                    <div class="capture-controls-container">
+                        <!-- Elevation / Permission Notice -->
+                        <div class="alert-banner info-banner">
+                            <span class="alert-banner-icon" aria-hidden="true">ℹ️</span>
+                            <div class="alert-banner-content">
+                                <strong>Windows Packet Capture Notice:</strong>
+                                Raw packet capture uses Scapy and the Npcap driver. On Windows 10/11, listening to physical network interfaces requires administrator elevation. If not elevated, capturing physical traffic will return a permission error.
+                            </div>
+                        </div>
+
+                        <div class="card capture-panel-card">
+                            <div class="card-header">
+                                <h2 class="card-title">Packet Capture Configuration</h2>
+                                <span class="status-indicator-badge" id="capture-panel-state">Engine: IDLE</span>
+                            </div>
+
+                            <form id="capture-form" class="capture-form" onsubmit="return false;">
+                                <div class="form-group">
+                                    <label for="capture-interface-select" class="form-label">
+                                        Target Network Interface <span class="text-danger">*</span>
+                                    </label>
+                                    <select id="capture-interface-select" class="form-select" required aria-describedby="iface-desc">
+                                        <option value="">-- Enumerating Available Adapters... --</option>
+                                    </select>
+                                    <small id="iface-desc" class="text-muted">
+                                        Explicit interface selection is required. Silent default captures are strictly prohibited.
+                                    </small>
+                                </div>
+
+                                <div class="form-row-2">
+                                    <div class="form-group">
+                                        <label for="capture-bpf-input" class="form-label">BPF Filter (Optional)</label>
+                                        <input type="text" id="capture-bpf-input" class="form-input" placeholder="e.g. tcp, udp port 53, ip" aria-describedby="bpf-desc">
+                                        <small id="bpf-desc" class="text-muted">Berkeley Packet Filter syntax.</small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="capture-count-input" class="form-label">Packet Limit (0 = Unlimited)</label>
+                                        <input type="number" id="capture-count-input" class="form-input" value="0" min="0" step="1" aria-describedby="count-desc">
+                                        <small id="count-desc" class="text-muted">Auto-stops once limit is reached.</small>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="capture-promiscuous-check">
+                                        <span>Enable Promiscuous Mode (Disabled by default for host safety)</span>
+                                    </label>
+                                </div>
+
+                                <div class="capture-action-row">
+                                    <button type="button" id="btn-start-capture" class="btn btn-primary">
+                                        <span class="btn-icon" aria-hidden="true">▶️</span>
+                                        <span>Start Packet Capture</span>
+                                    </button>
+                                    <button type="button" id="btn-stop-capture" class="btn btn-danger" disabled>
+                                        <span class="btn-icon" aria-hidden="true">⏹️</span>
+                                        <span>Stop Capture</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Active Session Statistics Card -->
+                        <div class="card capture-stats-card">
+                            <div class="card-header">
+                                <h2 class="card-title">Live Capture Statistics</h2>
+                                <span class="card-badge" id="capture-stats-status">IDLE</span>
+                            </div>
+
+                            <div class="stats-overview-grid">
+                                <div class="stat-box">
+                                    <span class="stat-box-label">Packets Ingested</span>
+                                    <span class="stat-box-val" id="cs-total-packets">0</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-box-label">TCP Packets</span>
+                                    <span class="stat-box-val" id="cs-tcp-packets">0</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-box-label">UDP Packets</span>
+                                    <span class="stat-box-val" id="cs-udp-packets">0</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-box-label">ICMP Packets</span>
+                                    <span class="stat-box-val" id="cs-icmp-packets">0</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-box-label">Duration</span>
+                                    <span class="stat-box-val" id="cs-duration">0.0s</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-box-label">Active Adapter</span>
+                                    <span class="stat-box-val text-sm" id="cs-adapter">None</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================================
+                     SECTION 5: SYSTEM STATUS
+                     ======================================================== -->
+                <section id="section-status" class="dashboard-section hidden">
+                    <div class="status-cards-grid">
+                        <!-- Core Engine Status -->
+                        <div class="card status-card">
+                            <div class="status-card-header">
+                                <span class="status-card-icon" aria-hidden="true">⚙️</span>
+                                <h3>Backend & Core Engine</h3>
+                            </div>
+                            <ul class="status-list">
+                                <li>
+                                    <span class="status-prop">NIDS Engine:</span>
+                                    <span class="status-val" id="sys-engine-version">NIDS v0.1.0</span>
+                                </li>
+                                <li>
+                                    <span class="status-prop">Execution Phase:</span>
+                                    <span class="status-val text-accent" id="sys-phase">Phase 7</span>
+                                </li>
+                                <li>
+                                    <span class="status-prop">Target Platform:</span>
+                                    <span class="status-val">Windows 10/11 (Python 3.13)</span>
+                                </li>
+                                <li>
+                                    <span class="status-prop">REST API Status:</span>
+                                    <span class="status-val text-success">Healthy (200 OK)</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Capture Engine Status -->
+                        <div class="card status-card">
+                            <div class="status-card-header">
+                                <span class="status-card-icon" aria-hidden="true">🛰️</span>
+                                <h3>Packet Capture Engine</h3>
+                            </div>
+                            <ul class="status-list">
+                                <li>
+                                    <span class="status-prop">Driver Implementation:</span>
+                                    <span class="status-val">Scapy AsyncSniffer</span>
+                                </li>
+                                <li>
+                                    <span class="status-prop">Capture Lifecycle:</span>
+                                    <span class="status-val" id="sys-capture-status">IDLE</span>
+                                </li>
+                                <li>
+                                    <span class="status-prop">Bound Adapter:</span>
+                                    <span class="status-val" id="sys-capture-iface">None</span>
+                                </li>
+                                <li>
+                                    <span class="status-prop">Payload Retention:</span>
+                                    <span class="status-val text-success">Disabled (Metadata Only)</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Detection Engine Status -->
+                        <div class="card status-card">
+                            <div class="status-card-header">
+                                <span class="status-card-icon" aria-hidden="true">🎯</span>
+                                <h3>Detection & Heuristics</h3>
+                            </div>
+                            <ul class="status-list">
+                                <li>
+                                    <span class="status-prop">Active Defensive Rules:</span>
+                                    <span class="status-val" id="sys-active-rules">4 Rules</span>
+                                </li>
+                                <li>
+                                    <span class="status-prop">Inspections Completed:</span>
+                                    <span class="status-val" id="sys-inspections">0</span>
+                                </li>
+                                <li>
+                                    <span class="status-prop">Events Generated:</span>
+                                    <span class="status-val" id="sys-events-gen">0</span>
+                                </li>
+                                <li>
+                                    <span class="status-prop">Suricata Integration:</span>
+                                    <span class="status-val text-success" id="sys-suricata">Active (Phase 8)</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Suricata Deep Inspection Status -->
+                        <div class="card status-card">
+                            <div class="status-card-header">
+                                <span class="status-card-icon" aria-hidden="true">🛡️</span>
+                                <h3>Suricata Deep Inspection</h3>
+                            </div>
+                            <ul class="status-list">
+                                <li>
+                                    <span class="status-prop">Integration Mode:</span>
+                                    <span class="status-val text-accent" id="sys-suricata-mode">Standby</span>
+                                </li>
+                                <li>
+                                    <span class="status-prop">EVE Target File:</span>
+                                    <span class="status-val text-sm" id="sys-suricata-path">data/sample_eve.json</span>
+                                </li>
+                                <li>
+                                    <span class="status-prop">Events Parsed / Offset:</span>
+                                    <span class="status-val" id="sys-suricata-events">0 / 0 B</span>
+                                </li>
+                                <li>
+                                    <span class="status-prop">Signature Alerts Ingested:</span>
+                                    <span class="status-val" id="sys-suricata-alerts">0</span>
+                                </li>
+                            </ul>
+                            <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border-color);">
+                                <button id="btn-ingest-sample" class="btn btn-primary btn-sm" style="width: 100%;">
+                                    📥 Ingest Sample EVE Fixture
+                                </button>
+                                <span class="text-muted" style="display: block; margin-top: 0.35rem; font-size: 0.72rem; text-align: center;">
+                                    Test signature detection without live Suricata
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Storage Status -->
+                        <div class="card status-card">
+                            <div class="status-card-header">
+                                <span class="status-card-icon" aria-hidden="true">💾</span>
+                                <h3>SQLite Storage Engine</h3>
+                            </div>
+                            <ul class="status-list">
+                                <li>
+                                    <span class="status-prop">Database File:</span>
+                                    <span class="status-val text-sm">data/nids_events.sqlite</span>
+                                </li>
+                                <li>
+                                    <span class="status-prop">Journal Mode:</span>
+                                    <span class="status-val text-success">WAL (Write-Ahead Logging)</span>
+                                </li>
+                                <li>
+                                    <span class="status-prop">Async Persistence Worker:</span>
+                                    <span class="status-val" id="sys-async-worker">Active</span>
+                                </li>
+                                <li>
+                                    <span class="status-prop">Queue Capacity / Dropped:</span>
+                                    <span class="status-val" id="sys-queue-stats">5000 / 0</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- ========================================================
+         ALERT DETAIL INSPECTOR MODAL
+         ======================================================== -->
+    <div id="alert-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modal-alert-title">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-header-title">
+                    <span id="modal-severity-badge" class="badge">HIGH</span>
+                    <h2 id="modal-alert-title" class="modal-title">Port Scan Detected</h2>
+                    <span id="modal-status-badge" class="badge">NEW</span>
+                </div>
+                <button id="modal-close-btn" class="modal-close-btn" aria-label="Close alert details">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="modal-grid-2">
+                    <div class="modal-prop-group">
+                        <span class="prop-label">Alert ID:</span>
+                        <span class="prop-val" id="modal-alert-id">-</span>
+                    </div>
+                    <div class="modal-prop-group">
+                        <span class="prop-label">Rule Identifier:</span>
+                        <span class="prop-val" id="modal-rule-id">-</span>
+                    </div>
+                    <div class="modal-prop-group">
+                        <span class="prop-label">Timestamp (UTC):</span>
+                        <span class="prop-val" id="modal-timestamp">-</span>
+                    </div>
+                    <div class="modal-prop-group">
+                        <span class="prop-label">Protocol:</span>
+                        <span class="prop-val" id="modal-protocol">-</span>
+                    </div>
+                    <div class="modal-prop-group">
+                        <span class="prop-label">Source Endpoint:</span>
+                        <span class="prop-val" id="modal-src-endpoint">-</span>
+                    </div>
+                    <div class="modal-prop-group">
+                        <span class="prop-label">Destination Endpoint:</span>
+                        <span class="prop-val" id="modal-dst-endpoint">-</span>
+                    </div>
+                    <div class="modal-prop-group">
+                        <span class="prop-label">Confidence:</span>
+                        <span class="prop-val" id="modal-confidence">-</span>
+                    </div>
+                    <div class="modal-prop-group">
+                        <span class="prop-label">Threshold Applied:</span>
+                        <span class="prop-val" id="modal-threshold">-</span>
+                    </div>
+                </div>
+
+                <div class="modal-prop-group full-width">
+                    <span class="prop-label">Description:</span>
+                    <div class="description-box" id="modal-description">-</div>
+                </div>
+
+                <div class="modal-prop-group full-width" style="margin-top: 0.5rem; background: rgba(59, 130, 246, 0.08); border-left: 3px solid #3b82f6; padding: 0.75rem; border-radius: 4px;">
+                    <span class="prop-label" style="color: #60a5fa; font-weight: 600;">🛡️ Recommended Incident Response:</span>
+                    <div id="modal-recommended-action" style="font-size: 0.9rem; margin-top: 0.25rem; font-weight: 500;">-</div>
+                    <div id="modal-suggested-mitigation" style="font-size: 0.82rem; margin-top: 0.4rem; color: #94a3b8; white-space: pre-line;">-</div>
+                </div>
+
+                <div class="modal-prop-group full-width" style="margin-top: 0.5rem;">
+                    <label for="modal-analyst-notes" class="prop-label">Analyst Investigation Notes:</label>
+                    <textarea id="modal-analyst-notes" class="input-field" rows="2" style="width: 100%; resize: vertical; margin-top: 0.25rem; background: #0f172a; color: #f1f5f9; border: 1px solid #334155; border-radius: 4px; padding: 0.5rem;" placeholder="Enter notes on investigation findings, containment status, or resolution justification..."></textarea>
+                </div>
+
+                <div class="modal-prop-group full-width">
+                    <span class="prop-label">Forensic Evidence Telemetry:</span>
+                    <pre class="evidence-box"><code id="modal-evidence-json">-</code></pre>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="modal-actions-left" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <button id="modal-ack-btn" class="btn btn-warning btn-sm">
+                        🛡️ Acknowledge
+                    </button>
+                    <button id="modal-resolve-btn" class="btn btn-success btn-sm">
+                        ✅ Resolve Alert
+                    </button>
+                    <button id="modal-block-ip-btn" class="btn btn-danger btn-sm" title="Manually apply reversible IP containment (Requires confirmation)">
+                        🚫 Block Source IP
+                    </button>
+                </div>
+                <button id="modal-footer-close-btn" class="btn btn-secondary btn-sm">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Frontend SOC Controller -->
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

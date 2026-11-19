@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>NIDS | Next-Gen Network Intrusion Detection & Defense</title>
+    <meta name="description" content="Enterprise-grade Network Intrusion Detection System featuring line-rate DPI, Suricata 8.0 threat intelligence, stateful flow analytics, and automated containment.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2338bdf8'><path d='M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 6h2v2h-2V7zm0 4h2v6h-2v-6z'/></svg>">
+</head>
+<body>
+    <!-- Ambient Background Lighting & Cyber Grid Layer -->
+    <div class="bg-ambient-layer">
+        <div class="bg-grid-overlay"></div>
+        <div class="glow-orb-top"></div>
+        <div class="glow-orb-shield"></div>
+        <div class="glow-orb-bottom"></div>
+    </div>
+
+    <div class="landing-wrapper">
+        <!-- Sticky Minimal Navigation Bar -->
+        <header class="site-navbar">
+            <div class="nav-container">
+                <a href="/" class="brand-link">
+                    <div class="brand-shield-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 15l-4-4 1.41-1.41L10 13.17l6.59-6.59L18 8l-8 8z"/>
+                        </svg>
+                    </div>
+                    <div class="brand-meta">
+                        <span class="brand-name">NIDS</span>
+                        <span class="brand-tag">Enterprise Defense</span>
+                    </div>
+                </a>
+
+                <nav class="nav-menu">
+                    <ul class="nav-menu-links">
+                        <li><a href="#overview">Overview</a></li>
+                        <li><a href="#capabilities">Capabilities</a></li>
+                        <li><a href="#architecture">Architecture</a></li>
+                        <li><a href="#telemetry">Telemetry</a></li>
+                        <li><a href="#privacy">Privacy</a></li>
+                    </ul>
+                </nav>
+
+                <div class="nav-actions">
+                    <a href="/dashboard" class="btn-nav-soc">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                        </svg>
+                        <span>SOC Console</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Hero Section (Matches Reference Composition) -->
+        <main>
+            <section class="hero-section" id="overview">
+                <div class="hero-grid">
+                    <!-- Left Hero Content -->
+                    <div class="hero-content">
+                        <div class="trust-badge">
+                            <svg class="trust-badge-icon" viewBox="0 0 24 24">
+                                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 6h2v2h-2V7zm0 4h2v6h-2v-6z"/>
+                            </svg>
+                            <span>Next-Gen Network Defense</span>
+                        </div>
+
+                        <h1 class="hero-headline">
+                            Protect. Detect.<br>
+                            Respond. <span class="headline-gradient">Secure.</span>
+                        </h1>
+
+                        <div class="hero-subtitle">
+                            Intelligent Security for a Safer Digital Future
+                        </div>
+
+                        <p class="hero-description">
+                            End-to-end packet visibility, Suricata deep packet inspection, stateful flow heuristics, and automated incident containment — unified in one defense platform.
+                        </p>
+
+                        <!-- 4 Feature Badges in a Row -->
+                        <div class="hero-badges-row">
+                            <div class="badge-item">
+                                <div class="badge-icon-box">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                    </svg>
+                                </div>
+                                <span class="badge-label">Real-time<br>Protection</span>
+                            </div>
+
+                            <div class="badge-item">
+                                <div class="badge-icon-box">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.23 19.59 10.57 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/>
+                                    </svg>
+                                </div>
+                                <span class="badge-label">AI-Powered<br>Intelligence</span>
+                            </div>
+
+                            <div class="badge-item">
+                                <div class="badge-icon-box">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                                    </svg>
+                                </div>
+                                <span class="badge-label">Instant<br>Alerts</span>
+                            </div>
+
+                            <div class="badge-item">
+                                <div class="badge-icon-box">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                                    </svg>
+                                </div>
+                                <span class="badge-label">Automated<br>Response</span>
+                            </div>
+                        </div>
+
+                        <!-- CTA Group -->
+                        <div class="hero-cta-group">
+                            <a href="/dashboard" class="btn-cta-cyan">
+                                <span>Launch SOC Console</span>
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                </svg>
+                            </a>
+                            <a href="#capabilities" class="btn-cta-secondary">
+                                <span>Explore Capabilities</span>
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Right Hero Visual Stage (Futuristic Cyber Shield on Pedestal) -->
+                    <div class="hero-visual">
+                        <div class="cyber-stage">
+                            <!-- Pedestal Base with Concentric Rings -->
+                            <div class="pedestal-base">
+                                <div class="pedestal-ring"></div>
+                                <div class="pedestal-ring inner"></div>
+                                <div class="pedestal-ring core"></div>
+                            </div>
+                            <div class="pedestal-circuits"></div>
+
+                            <!-- Orbital Dashed Rings -->
+                            <div class="orbital-ring"></div>
+                            <div class="orbital-ring reverse"></div>
+
+                            <!-- Glowing Cyber Shield Graphic -->
+                            <div class="shield-container">
+                                <svg class="shield-svg" viewBox="0 0 250 310" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#0f2b5c" />
+                                            <stop offset="50%" stop-color="#071330" />
+                                            <stop offset="100%" stop-color="#030919" />
+                                        </linearGradient>
+                                        <linearGradient id="shieldBorderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#38bdf8" />
+                                            <stop offset="35%" stop-color="#0ea5e9" />
+                                            <stop offset="70%" stop-color="#3b82f6" />
+                                            <stop offset="100%" stop-color="#8b5cf6" />
+                                        </linearGradient>
+                                        <linearGradient id="shieldReflection" x1="0%" y1="0%" x2="100%" y2="0%">
+                                            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.25" />
+                                            <stop offset="100%" stop-color="#ffffff" stop-opacity="0.0" />
+                                        </linearGradient>
+                                        <linearGradient id="padlockGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" stop-color="#38bdf8" />
+                                            <stop offset="100%" stop-color="#0284c7" />
+                                        </linearGradient>
+                                        <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+                                            <feGaussianBlur stdDeviation="8" result="blur" />
+                                            <feMerge>
+                                                <feMergeNode in="blur" />
+                                                <feMergeNode in="SourceGraphic" />
+                                            </feMerge>
+                                        </filter>
+                                    </defs>
+
+                                    <!-- Outer Glow Border Path -->
+                                    <path d="M 125,12 C 182,12 230,36 230,80 C 230,185 168,258 125,288 C 82,258 20,185 20,80 C 20,36 68,12 125,12 Z"
+                                          fill="none" stroke="url(#shieldBorderGrad)" stroke-width="4" filter="url(#neonGlow)" />
+
+                                    <!-- Main Shield Body -->
+                                    <path d="M 125,18 C 178,18 222,40 222,82 C 222,180 164,250 125,278 C 86,250 28,180 28,82 C 28,40 72,18 125,18 Z"
+                                          fill="url(#shieldGrad)" stroke="rgba(56, 189, 248, 0.4)" stroke-width="2" />
+
+                                    <!-- Left Facet Shading for 3D depth -->
+                                    <path d="M 125,18 C 178,18 222,40 222,82 C 222,180 164,250 125,278 Z"
+                                          fill="url(#shieldReflection)" />
+
+                                    <!-- Inner Shield Core Bevel -->
+                                    <path d="M 125,32 C 168,32 205,52 205,88 C 205,170 155,232 125,258 C 95,232 45,170 45,88 C 45,52 82,32 125,32 Z"
+                                          fill="none" stroke="rgba(56, 189, 248, 0.3)" stroke-width="1.5" stroke-dasharray="8 4" />
+
+                                    <!-- Center Spine Line -->
+                                    <line x1="125" y1="20" x2="125" y2="276" stroke="rgba(56, 189, 248, 0.35)" stroke-width="1.5" />
+
+                                    <!-- Padlock Icon Centerpiece -->
+                                    <g transform="translate(0, -5)">
+                                        <!-- Shackle -->
+                                        <path d="M 108,138 V 116 C 108,104 115,96 125,96 C 135,96 142,104 142,116 V 138"
+                                              fill="none" stroke="url(#padlockGrad)" stroke-width="7" stroke-linecap="round" />
+                                        <!-- Shackle inner shadow -->
+                                        <path d="M 111,138 V 116 C 111,107 117,100 125,100 C 133,100 139,107 139,116 V 138"
+                                              fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.8" />
+                                        <!-- Body -->
+                                        <rect x="96" y="136" width="58" height="48" rx="10"
+                                              fill="url(#padlockGrad)" stroke="#38bdf8" stroke-width="2" filter="url(#neonGlow)" />
+                                        <!-- Keyhole -->
+                                        <circle cx="125" cy="154" r="5" fill="#ffffff" />
+                                        <polygon points="122.5,155 127.5,155 129,168 121,168" fill="#ffffff" />
+                                    </g>
+                                </svg>
+                            </div>
+
+                            <!-- 5 Floating HUD Glass Cards (Matching Reference Composition) -->
+                            <!-- Card 1: Cloud Defense (Top Left) -->
+                            <div class="hud-card top-left">
+                                <div class="hud-icon">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/>
+                                    </svg>
+                                </div>
+                                <div class="hud-content">
+                                    <span class="hud-label">Cloud Defense</span>
+                                    <span class="hud-val">
+                                        <span class="hud-dot"></span>
+                                        Protected
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Card 2: Network Monitoring (Bottom Left) -->
+                            <div class="hud-card bottom-left">
+                                <div class="hud-icon">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M3 17h2v-4H3v4zm4 0h2V7H7v10zm4 0h2v-7h-2v7zm4 0h2v-4h-2v4zm4 0h2V4h-2v13z"/>
+                                    </svg>
+                                </div>
+                                <div class="hud-content">
+                                    <span class="hud-label">Network Monitor</span>
+                                    <span class="hud-val">10.4 Gbps Active</span>
+                                </div>
+                            </div>
+
+                            <!-- Card 3: Threat Intelligence (Top Right) -->
+                            <div class="hud-card top-right">
+                                <div class="hud-icon">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                                    </svg>
+                                </div>
+                                <div class="hud-content">
+                                    <span class="hud-label">Threat Intel</span>
+                                    <span class="hud-val">Suricata 8.0</span>
+                                </div>
+                            </div>
+
+                            <!-- Card 4: Host Activity (Mid Right) -->
+                            <div class="hud-card mid-right">
+                                <div class="hud-icon">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                                    </svg>
+                                </div>
+                                <div class="hud-content">
+                                    <span class="hud-label">Host Telemetry</span>
+                                    <span class="hud-val">0-Trust Enforced</span>
+                                </div>
+                            </div>
+
+                            <!-- Card 5: Endpoint Security (Bottom Right) -->
+                            <div class="hud-card bottom-right">
+                                <div class="hud-icon">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                                    </svg>
+                                </div>
+                                <div class="hud-content">
+                                    <span class="hud-label">Containment</span>
+                                    <span class="hud-val">Host Isolation Ready</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Live Telemetry Stats Bar Section -->
+            <section class="stats-bar-section" id="telemetry">
+                <div class="stats-bar-grid">
+                    <div class="stat-metric">
+                        <span class="stat-number">39,600+</span>
+                        <span class="stat-desc">Threat Signatures Synced</span>
+                    </div>
+                    <div class="stat-metric">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-desc">Wire-Speed Capture</span>
+                    </div>
+                    <div class="stat-metric">
+                        <span class="stat-number">10,000</span>
+                        <span class="stat-desc">Concurrent Flow Tracking</span>
+                    </div>
+                    <div class="stat-metric">
+                        <span class="stat-number">&lt; 1.2ms</span>
+                        <span class="stat-desc">Detection &amp; Alert Latency</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Enterprise Capabilities Section -->
+            <section class="section-container" id="capabilities">
+                <div class="section-header">
+                    <span class="section-tag">Core Technologies</span>
+                    <h2 class="section-title">Engineered for Critical Environments</h2>
+                    <p class="section-subtitle">
+                        Multi-layered cyber protection combining kernel-level packet inspection, behavioral state machine analysis, and automated mitigation.
+                    </p>
+                </div>
+
+                <div class="capabilities-grid">
+                    <!-- Card 1 -->
+                    <div class="cap-card">
+                        <div class="cap-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="cap-title">Suricata 8.0 Deep Packet Inspection</h3>
+                        <p class="cap-desc">
+                            Direct EVE-JSON streaming integration with Suricata 8.0.8. Ingests high-fidelity signatures, protocol anomalies, and malicious payload patterns alongside native heuristics.
+                        </p>
+                        <div class="cap-tags">
+                            <span class="cap-tag-pill">EVE-JSON Stream</span>
+                            <span class="cap-tag-pill">Signature Corroboration</span>
+                            <span class="cap-tag-pill">Suricata 8.0</span>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="cap-card">
+                        <div class="cap-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="cap-title">Stateful 5-Tuple Flow Analytics</h3>
+                        <p class="cap-desc">
+                            Reconstructs bidirectional session state with microsecond accuracy. Tracks packet volumes, byte ratios, TCP handshakes, and state transitions across 10,000+ active flows.
+                        </p>
+                        <div class="cap-tags">
+                            <span class="cap-tag-pill">5-Tuple Hash</span>
+                            <span class="cap-tag-pill">Sliding Window Rates</span>
+                            <span class="cap-tag-pill">TCP State Engine</span>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="cap-card">
+                        <div class="cap-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+                            </svg>
+                        </div>
+                        <h3 class="cap-title">Multi-Vector Heuristic Engine</h3>
+                        <p class="cap-desc">
+                            Configurable detection thresholds for rapid port scanning, SYN floods, anomalous bandwidth spikes, and unauthorized protocol tunnelling with zero false positive bloat.
+                        </p>
+                        <div class="cap-tags">
+                            <span class="cap-tag-pill">SYN Flood Defense</span>
+                            <span class="cap-tag-pill">Port Scan Heuristics</span>
+                            <span class="cap-tag-pill">Traffic Spike Alerts</span>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="cap-card">
+                        <div class="cap-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="cap-title">Defensive Containment &amp; Playbooks</h3>
+                        <p class="cap-desc">
+                            Deterministic, safe incident containment. Evaluates threat severity, recommends step-by-step mitigation, and automates OS-level firewall isolation with 1-click rollback.
+                        </p>
+                        <div class="cap-tags">
+                            <span class="cap-tag-pill">Safe Firewall Blocks</span>
+                            <span class="cap-tag-pill">RFC-1918 Protection</span>
+                            <span class="cap-tag-pill">1-Click Unblock</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Architecture Pipeline Section -->
+            <section class="section-container" id="architecture">
+                <div class="section-header">
+                    <span class="section-tag">System Architecture</span>
+                    <h2 class="section-title">Zero-Loss Inspection Pipeline</h2>
+                    <p class="section-subtitle">
+                        High-throughput pipeline routing network frames from physical interface drivers directly into analytical intelligence engines.
+                    </p>
+                </div>
+
+                <div class="pipeline-diagram-box">
+                    <div class="pipeline-node">
+                        <div class="pipeline-node-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+                            </svg>
+                        </div>
+                        <span class="pipeline-node-title">Npcap Driver</span>
+                        <span class="pipeline-node-sub">Kernel Raw Capture</span>
+                    </div>
+
+                    <div class="pipeline-connector">→</div>
+
+                    <div class="pipeline-node">
+                        <div class="pipeline-node-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/>
+                            </svg>
+                        </div>
+                        <span class="pipeline-node-title">Scapy Sniffer</span>
+                        <span class="pipeline-node-sub">Metadata Parsing</span>
+                    </div>
+
+                    <div class="pipeline-connector">→</div>
+
+                    <div class="pipeline-node">
+                        <div class="pipeline-node-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                            </svg>
+                        </div>
+                        <span class="pipeline-node-title">Flow Tracker</span>
+                        <span class="pipeline-node-sub">5-Tuple Aggregation</span>
+                    </div>
+
+                    <div class="pipeline-connector">→</div>
+
+                    <div class="pipeline-node">
+                        <div class="pipeline-node-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+                            </svg>
+                        </div>
+                        <span class="pipeline-node-title">Dual Detection</span>
+                        <span class="pipeline-node-sub">Heuristics &amp; Suricata DPI</span>
+                    </div>
+
+                    <div class="pipeline-connector">→</div>
+
+                    <div class="pipeline-node">
+                        <div class="pipeline-node-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                            </svg>
+                        </div>
+                        <span class="pipeline-node-title">SOC Console</span>
+                        <span class="pipeline-node-sub">Actionable Defense</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Zero-Payload Privacy Guarantee Section -->
+            <section class="section-container" id="privacy">
+                <div class="cap-card" style="border-color: rgba(56, 189, 248, 0.3); background: rgba(8, 17, 39, 0.85);">
+                    <div style="display: flex; align-items: flex-start; gap: 1.5rem; flex-wrap: wrap;">
+                        <div class="cap-icon" style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.35);">
+                            <svg viewBox="0 0 24 24" style="fill: #10b981;">
+                                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                            </svg>
+                        </div>
+                        <div style="flex: 1; min-width: 280px;">
+                            <h3 class="cap-title" style="color: #ffffff; margin-bottom: 0.5rem;">Zero-Payload Privacy &amp; Data Ethics Guarantee</h3>
+                            <p class="cap-desc" style="margin-bottom: 1rem;">
+                                NIDS strictly inspects network headers (IP addresses, transport ports, flags, packet timing, and flow volumes) for intrusion identification. Frame payloads, application credentials, encrypted TLS streams, and message bodies are never stored, logged to disk, or transmitted externally.
+                            </p>
+                            <div class="cap-tags">
+                                <span class="cap-tag-pill" style="color: #10b981; border-color: rgba(16, 185, 129, 0.3);">Metadata-Only Ingestion</span>
+                                <span class="cap-tag-pill" style="color: #10b981; border-color: rgba(16, 185, 129, 0.3);">No Payload Storage</span>
+                                <span class="cap-tag-pill" style="color: #10b981; border-color: rgba(16, 185, 129, 0.3);">GDPR &amp; Privacy Compliant</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bottom Call to Action Banner -->
+            <section class="section-container">
+                <div class="cta-banner-card">
+                    <h2 class="cta-banner-title">Take Control of Your Network Perimeter</h2>
+                    <p class="cta-banner-desc">
+                        Deploy real-time intrusion monitoring, verify signature alerts against Suricata rules, and isolate hostile actors with zero configuration friction.
+                    </p>
+                    <a href="/dashboard" class="btn-cta-cyan">
+                        <span>Launch SOC Console</span>
+                        <svg viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        </svg>
+                    </a>
+                </div>
+            </section>
+        </main>
+
+        <!-- Site Footer -->
+        <footer class="site-footer">
+            <div class="footer-inner">
+                <div class="footer-copy">
+                    &copy; 2026 NIDS Cybersecurity Platform. All rights reserved.
+                </div>
+                <ul class="footer-nav">
+                    <li><a href="#overview">Overview</a></li>
+                    <li><a href="#capabilities">Capabilities</a></li>
+                    <li><a href="#architecture">Architecture</a></li>
+                    <li><a href="/dashboard">SOC Dashboard</a></li>
+                </ul>
+            </div>
+            <div class="footer-disclaimer">
+                <strong>Defensive Authorization Notice:</strong> This software is engineered strictly for authorized defense operations, network monitoring, security auditing, and academic research. Unauthorized packet sniffing or adversarial disruption against computer systems without explicit owner consent is prohibited by law.
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
